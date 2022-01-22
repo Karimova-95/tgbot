@@ -16,10 +16,7 @@ import ru.skillfactory.tgbot.dto.ValuteCursOnDate;
 import ru.skillfactory.tgbot.entity.ActiveChat;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -100,7 +97,11 @@ public class BotService extends TelegramLongPollingBot {
             } else if (ADD_SPEND.equalsIgnoreCase(message.getText())) {
                 response.setText("Отправьте мне сумму расходов");
             } else {
-                response.setText(financeService.addFinanceOperation(getPreviousCommand(message.getChatId()), message.getText(), message.getChatId()));
+                response.setText(financeService.addFinanceOperation(getPreviousCommand(message.getChatId()),
+                        message.getText(),
+                        message.getChatId(),
+                        message.getDate()));
+//                System.out.println("***************************************************" + new java.util.Date((long)message.getDate()*1000));
             }
 
             putPreviousCommand(message.getChatId(), message.getText());

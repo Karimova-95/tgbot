@@ -1,4 +1,5 @@
 language: java
 jdk:
-  -oraclejdk11
-script: mvn clean install -DskipTest 
+  -openjdk11
+script:
+  -mvn clean install -DskipTest

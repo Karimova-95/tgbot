@@ -8,6 +8,8 @@ import ru.skillfactory.tgbot.entity.Income;
 import ru.skillfactory.tgbot.entity.Spend;
 
 import java.math.BigDecimal;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -19,18 +21,20 @@ public class FinanceService {
     private final SpendDAO spendDAO;
 
 
-    public String addFinanceOperation(String operationType, String price, Long chatId) {
+    public String addFinanceOperation(String operationType, String price, Long chatId, Integer date) {
         String message;
         if (ADD_INCOME.equalsIgnoreCase(operationType)) {
             Income income = new Income();
             income.setChatId(chatId);
             income.setIncome(new BigDecimal(price));
+            income.setDate(new Date((long)date*1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             incomeDAO.save(income);
             message = "Доход в размере " + price + " был успешно добавлен";
         } else {
             Spend spend = new Spend();
             spend.setChatId(chatId);
             spend.setSpend(new BigDecimal(price));
+            spend.setDate(new Date((long)date*1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());;
             spendDAO.save(spend);
             message = "Расход в размере " + price + " был успешно добавлен";
         }

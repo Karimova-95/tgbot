@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "INCOMES")
@@ -24,4 +25,7 @@ public class Income {
 
     @Column(name = "INCOME")
     private BigDecimal income;
+
+    @Column(name = "DATE")
+    private LocalDateTime date;
 }
