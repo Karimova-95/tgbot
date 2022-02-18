@@ -6,7 +6,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,8 +18,8 @@ class CurrencyControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void testWHenAskABoutAllCurrencies() throws Exception {
-        mockMvc.perform(post("/getCurrencies"))
+    public void testWhenAskAboutAllCurrencies() throws Exception {
+        mockMvc.perform(get("/getCurrencies"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }

@@ -20,7 +20,6 @@ public class FinanceService {
     private final IncomeDAO incomeDAO;
     private final SpendDAO spendDAO;
 
-
     public String addFinanceOperation(String operationType, String price, Long chatId, Integer date) {
         String message;
         if (ADD_INCOME.equalsIgnoreCase(operationType)) {
@@ -34,7 +33,7 @@ public class FinanceService {
             Spend spend = new Spend();
             spend.setChatId(chatId);
             spend.setSpend(new BigDecimal(price));
-            spend.setDate(new Date((long)date*1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());;
+            spend.setDate(new Date((long) date * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             spendDAO.save(spend);
             message = "Расход в размере " + price + " был успешно добавлен";
         }
