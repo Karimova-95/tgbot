@@ -1,10 +1,13 @@
 package ru.skillfactory.tgbot.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
+@Slf4j
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class FinanceServiceTest {
@@ -30,41 +34,39 @@ class FinanceServiceTest {
     @InjectMocks
     private FinanceService financeService;
 
-    // запишем время, когда начался каждый тест
     @BeforeEach
-    public void beforeAll() {
-        System.out.println(System.currentTimeMillis());
+    void beforeAll() {
+        log.info(String.valueOf(System.currentTimeMillis()));
     }
 
-    // запишем время, когда закончился каждый тест
     @AfterEach
-    public void afterEach() {
-        System.out.println(System.currentTimeMillis());
+    void afterEach() {
+        log.info(String.valueOf(System.currentTimeMillis()));
     }
-    // тестовый метод для первого кейса
+
+    @DisplayName("ADD_SPEND_test")
+    @Test
+    void addFinanceOperationElseBranchTest() {
+        String price = "200";
+        String message = financeService.addFinanceOperation("/addspend", price, 250L, 123456);
+        assertEquals("Расход в размере " + price + " был успешно добавлен", message);
+        verify(spendDAO).save(any(Spend.class));
+    }
 
     @DisplayName("ADD_INCOME_test")
-    @Test
-    public void addFinanceOperationAddIncomeTest() {
-        // установили произвольное значение переменной для отправки в метод
-        String price = "150.0";
-        // обращаемся к методу с произвольными параметрами и сохраняем результат в переменную
-        String message = financeService.addFinanceOperation("/addincome", price, 500L, 45156644);
-        // убеждаемся, что получили ожидаемый результат
+    @ParameterizedTest
+    @ValueSource(strings = {"150.0", "200.50", "199.99"})
+    void addFinanceOperationAddIncomeTest(String price) {
+        String message = financeService.addFinanceOperation("/addincome", price, 500L, 56789);
         assertEquals("Доход в размере " + price + " был успешно добавлен", message);
         verify(incomeDAO).save(any(Income.class));
     }
 
-    // тестовый метод для второго кейса, всё аналогично первому, но с другими параметрами
-    @DisplayName("non_ADD_INCOME_test")
+    @DisplayName("INCORRECT_INPUT_test")
     @Test
-    public void addFinanceOperationElseBranchTest() {
-        // снова даём значение переменной
-        String price = "200";
-        // снова обращаемся к методу с другими параметрами
-        String message = financeService.addFinanceOperation("/addspend", price, 250L, 4556662);
-        // убеждаемся, что получили ожидаемый результат
-        assertEquals("Расход в размере " + price + " был успешно добавлен", message);
-        verify(spendDAO).save(any(Spend.class));
+    void incorrectOperationTest() {
+        String incorrectPrice = "price";
+        String message = financeService.addFinanceOperation("/abcde", incorrectPrice, 100L, 1234567);
+        assertEquals("Уупс! Вы введи неверную команду!", message);
     }
 }

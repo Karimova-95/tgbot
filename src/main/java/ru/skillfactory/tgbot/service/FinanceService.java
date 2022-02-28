@@ -16,6 +16,7 @@ import java.util.Date;
 public class FinanceService {
 
     private static final String ADD_INCOME = "/addincome";
+    private static final String ADD_SPEND = "/addspend";
 
     private final IncomeDAO incomeDAO;
     private final SpendDAO spendDAO;
@@ -26,16 +27,18 @@ public class FinanceService {
             Income income = new Income();
             income.setChatId(chatId);
             income.setIncome(new BigDecimal(price));
-            income.setDate(new Date((long)date*1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            income.setDate(new Date((long) date * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             incomeDAO.save(income);
             message = "Доход в размере " + price + " был успешно добавлен";
-        } else {
+        } else if (ADD_SPEND.equals(operationType)) {
             Spend spend = new Spend();
             spend.setChatId(chatId);
             spend.setSpend(new BigDecimal(price));
             spend.setDate(new Date((long) date * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             spendDAO.save(spend);
             message = "Расход в размере " + price + " был успешно добавлен";
+        } else {
+            message = "Уупс! Вы ввели неверную команду!";
         }
         return message;
     }

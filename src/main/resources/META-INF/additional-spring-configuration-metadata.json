@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "bot.name",
+      "type": "java.lang.String",
+      "description": "Description for bot.name."
+    },
+    {
+      "name": "bot.api.key",
+      "type": "java.lang.String",
+      "description": "Description for bot.api.key."
+    },
+    {
+      "name": "cbr.api.url",
+      "type": "java.lang.String",
+      "description": "Description for cbr.api.url."
+    }
+  ]
+}

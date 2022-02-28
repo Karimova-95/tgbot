@@ -12,11 +12,11 @@ public class StatService {
 
     private final StatsDAO statsDAO;
 
-    public int getCountIfIncomesThatGreater(BigDecimal amount) {
-        return  statsDAO.getCountIncomesThatGreaterThan(amount);
+    public Integer getCountIfIncomesThatGreater(BigDecimal amount) {
+        return statsDAO.getCountIncomesThatGreaterThan(amount);
     }
 
-    public int getCountIfIncomesThatLess(BigDecimal amount) {
-        return  statsDAO.getCountIncomesThatLessThan(amount);
+    public Integer getCountIfIncomesThatLess(BigDecimal amount) {
+        return statsDAO.getCountIncomesThatLessThan(amount);
     }
 }

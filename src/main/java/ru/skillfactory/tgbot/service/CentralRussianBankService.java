@@ -16,10 +16,10 @@ import java.util.List;
 public class CentralRussianBankService extends WebServiceTemplate {
     @Value("${cbr.api.url}")
     private String cbrApiUrl;
+    private GetCursOnDateXml getCursOnDateXML;
 
-    //Создаем метод получения данных
     public List<ValuteCursOnDate> getCurrenciesFromCbr() throws DatatypeConfigurationException {
-        final GetCursOnDateXml getCursOnDateXML = new GetCursOnDateXml();
+        getCursOnDateXML = new GetCursOnDateXml();
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(new Date());
 
@@ -35,5 +35,22 @@ public class CentralRussianBankService extends WebServiceTemplate {
         final List<ValuteCursOnDate> courses = response.getGetCursOnDateXmlResult().getValuteData();
         courses.forEach(course -> course.setName(course.getName().trim()));
         return courses;
+    }
+
+    public ValuteCursOnDate getCurrencyByCodeFromCbr(String code) throws DatatypeConfigurationException {
+        getCursOnDateXML = new GetCursOnDateXml();
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(new Date());
+
+        XMLGregorianCalendar xmlGregCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+        getCursOnDateXML.setOnDate(xmlGregCal);
+
+        GetCursOnDateXmlResponse response = (GetCursOnDateXmlResponse) marshalSendAndReceive(cbrApiUrl, getCursOnDateXML);
+        final List<ValuteCursOnDate> courses = response.getGetCursOnDateXmlResult().getValuteData();
+        return courses.stream()
+                .filter(c -> c.getCode().equals(code))
+                .peek(c -> c.setName(c.getName().trim()))
+                .findFirst()
+                .orElse(null);
     }
 }
