@@ -67,6 +67,6 @@ class FinanceServiceTest {
     void incorrectOperationTest() {
         String incorrectPrice = "price";
         String message = financeService.addFinanceOperation("/abcde", incorrectPrice, 100L, 1234567);
-        assertEquals("Уупс! Вы введи неверную команду!", message);
+        assertEquals("Уупс! Вы ввели неверную команду!", message);
     }
 }
